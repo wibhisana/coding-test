@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export default function Home() {
-  const [users, setUsers] = useState([]);
+  const [salesReps, setSalesReps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [question, setQuestion] = useState("");
   const [answer, setAnswer] = useState("");
@@ -10,7 +10,7 @@ export default function Home() {
     fetch("http://localhost:8000/api/data")
       .then((res) => res.json())
       .then((data) => {
-        setUsers(data.users || []);
+        setSalesReps(data.salesReps || []);
         setLoading(false);
       })
       .catch((err) => {
@@ -38,14 +38,14 @@ export default function Home() {
       <h1>Next.js + FastAPI Sample</h1>
 
       <section style={{ marginBottom: "2rem" }}>
-        <h2>Dummy Data</h2>
+        <h2>Sales Reps</h2>
         {loading ? (
           <p>Loading...</p>
         ) : (
           <ul>
-            {users.map((user) => (
-              <li key={user.id}>
-                {user.name} - {user.role}
+            {salesReps.map((rep) => (
+              <li key={rep.id}>
+                {rep.name} - {rep.role}
               </li>
             ))}
           </ul>

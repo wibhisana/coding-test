@@ -5,6 +5,15 @@ import json
 
 app = FastAPI()
 
+# Konfigurasi CORS
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],  # izinkan Next.js frontend
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 # Load dummy data
 with open("dummyData.json", "r") as f:
     DUMMY_DATA = json.load(f)
