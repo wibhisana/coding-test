@@ -87,10 +87,10 @@ export default function Home() {
         </section>
 
         {/* AI Question Section */}
-        <section className="mt-10 max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
-          <h2 className="text-xl font-semibold mb-4">AI Assistant</h2>
+        <section className="mt-10 max-w-4xl mx-auto bg-white rounded-xl shadow-md p-6">
+          <h2 className="text-xl font-semibold mb-6 text-gray-800">AI Assistant</h2>
 
-          <div className="space-y-4 max-h-64 overflow-y-auto mb-4">
+          <div className="space-y-4 max-h-72 overflow-y-auto pr-2">
             {chatHistory.map((msg, idx) => (
               <div
                 key={idx}
