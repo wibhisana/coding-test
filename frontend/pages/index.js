@@ -22,6 +22,12 @@ export default function Home() {
   }, []);
 
   const handleAskQuestion = async () => {
+    if (!question.trim()) return;
+  
+    const userMessage = { role: "user", content: question };
+    setChatHistory((prev) => [...prev, userMessage]);
+    setQuestion("");
+  
     try {
       const response = await fetch("http://localhost:8000/api/ai", {
         method: "POST",
@@ -29,13 +35,12 @@ export default function Home() {
         body: JSON.stringify({ question }),
       });
       const data = await response.json();
-      setAnswer(data.answer);
+      const aiMessage = { role: "ai", content: data.answer };
+      setChatHistory((prev) => [...prev, aiMessage]);
     } catch (error) {
       console.error("Error in AI request:", error);
     }
   };
-
-
   
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 p-6 sm:p-10 font-sans">
@@ -82,33 +87,45 @@ export default function Home() {
         </section>
 
         {/* AI Question Section */}
+        <section className="mt-10 max-w-2xl mx-auto bg-white rounded-lg shadow p-6">
+          <h2 className="text-xl font-semibold mb-4">AI Assistant</h2>
 
+          <div className="space-y-4 max-h-64 overflow-y-auto mb-4">
+            {chatHistory.map((msg, idx) => (
+              <div
+                key={idx}
+                className={`p-3 rounded-lg ${
+                  msg.role === "user"
+                    ? "bg-blue-100 self-end text-right"
+                    : "bg-gray-100 self-start"
+                }`}
+              >
+                <p className="text-sm text-gray-600 mb-1">
+                  {msg.role === "user" ? "You" : "AI"}
+                </p>
+                <div className="text-gray-800">{msg.content}</div>
+              </div>
+            ))}
+          </div>
 
-        <section>
-          <h2 className="text-2xl font-semibold text-purple-700 mb-4">
-            Ask a Question to AI 🤖
-          </h2>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex gap-2 items-center">
             <input
+              className="flex-1 border p-2 rounded"
               type="text"
-              placeholder="Type your question here..."
+              placeholder="Ask something..."
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-400"
+              onKeyDown={(e) => e.key === "Enter" && handleAskQuestion()}
             />
             <button
               onClick={handleAskQuestion}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-medium px-6 py-2 rounded-lg transition"
+              className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
             >
-              Ask AI
+              Send
             </button>
           </div>
-          {answer && (
-            <div className="mt-6 bg-green-100 border border-green-300 text-green-900 p-4 rounded-lg shadow-sm">
-              <strong>AI Response:</strong> {answer}
-            </div>
-          )}
         </section>
+
       </main>
     </div>
   );
